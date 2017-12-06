@@ -123,10 +123,10 @@
 								$this->getImgType($picArr['secure_url'])
 							);
 						}
-						if(isset($picArr['width'])){
+						if(isset($picArr['width']) && is_numeric($picArr['width'])){
 							$APPLICATION->SetPageProperty("og:image:width", $picArr['width']);
 						}
-						if(isset($picArr['height'])){
+						if(isset($picArr['height']) && is_numeric($picArr['height'])){
 							$APPLICATION->SetPageProperty("og:image:height", $picArr['height']);
 						}
 					}
