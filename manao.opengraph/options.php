@@ -1,80 +1,58 @@
 <?
-	if (!$USER->IsAdmin())
-    return;
+	if (!$USER->IsAdmin()){
+		return;
+	}
 	
-	\Bitrix\Main\Localization\Loc::loadMessages(__FILE__);
-	use Bitrix\Main\Config\Option;
+	use \Bitrix\Main\Config\Option,
+		\Bitrix\Main\Localization\Loc;
 	
+	Loc::loadMessages(__FILE__);
 	global $APPLICATION;
-?>
-<style>
-	.options-wrapper{
-	width:60%;
-	padding: 0 5% 20px 10%;
-	border: ridge silver 5px;
-	overflow:hidden;
-	}
-	.og-options-form{
-	width:100%;
-	}
-	.og-options-form>div{
-	width:100%;
-	clear: both;
-	}
-	.og-options-form>div>p:nth-of-type(odd){
-	width:25%;
-	float:left;
-	}
-	.og-options-form>div>p:nth-of-type(even){
-	float:left;
-	}
-	.og-options-form>div input{
-	width:100%;
-	box-sizing:border-box;
-	margin-bottom:10px;
-	}
-</style>
-<?
+	
+	$rightsTab = array(
+		"DIV" => "edit3",
+		"TAB" => Loc::getMessage("MAIN_OPTIONS"),
+		"ICON" => "fileman_settings",
+		"TITLE" => Loc::getMessage("MODULE_OPTIONS")
+	);
+	$aTabs[] = $rightsTab;
+	
+	$tabControl = new CAdmintabControl("tabControl", $aTabs);
+	
+	$tabControl->Begin();
+	
 	if(isset($_POST)){
-		if($_POST['del'] !== 'on'){
-			if(isset($_POST["title"]) && strlen($_POST["title"])){
-				Option::set("manao.opengraph", "og:title", $_POST["title"]);
-			}
-			if(isset($_POST["description"]) && strlen($_POST["description"])){
-				Option::set("manao.opengraph", "og:description", $_POST["description"]);
-			}
-			if(isset($_POST["image"]) && strlen($_POST["image"])){
-				Option::set("manao.opengraph", "og:image", $_POST["image"]);
-			}
+
+		if(isset($_POST["title"])){
+			Option::set("manao.opengraph", "og:title", $_POST["title"]);
 		}
-		else{
-			Option::delete("manao.opengraph");
+		if(isset($_POST["description"])){
+			Option::set("manao.opengraph", "og:description", $_POST["description"]);
+		}
+		if(isset($_POST["image"])){
+			Option::set("manao.opengraph", "og:image", $_POST["image"]);
 		}
 	}
 ?>
-<h1>Настройки модуля</h1>
 <div class="options-wrapper">
-	<h3>Установить основные мета-теги</h3>
+	
 	<form action="" method="POST" class="og-options-form">
-		<div>
-			<p>og:title</p>
-			<p><input name="title" type="text" size="40" placeholder="<?=Option::get("manao.opengraph", "title")?>"></p>
-		</div>
-		<div>
-			<p>og:description</p>
-			<p><textarea name="description" cols="41" placeholder="<?=Option::get("manao.opengraph", "description")?>"></textarea></p>
-		</div>
-		<div>
-		<p>og:image</p>
-		<p>
-		<input name="image" type="text" size="40" placeholder="<?=Option::get("manao.opengraph", "image")?>"></p>
-		</div>
-		<div>
-			<p>Очистить все свойства?</p>
-			<input name="del" type="checkbox">
-		</div>
-		<div>
-			<input type="submit" value="Сохранить">
-		</div>
-	</form>
-</div>
+		<?=bitrix_sessid_post()?>
+		<?$tabControl->BeginNextTab();?>
+		
+		<tr>
+			<td valign="top"><label for="og:title">og:title</label></td>
+			<td><input type="text" name="title" id="og:title" size="40" value="<?=Option::get("manao.opengraph", "og:title")?>"></td>
+		</tr>
+		<tr>
+			<td valign="top"><p>og:description</p></td>
+			<td><textarea name="description" cols="42"><?=Option::get("manao.opengraph", "og:description")?></textarea></td>
+		</tr>
+		<tr>
+			<td valign="top"><label for="og:image">og:image</label></td>
+			<td><input type="text" name="image" id="og:image" size="40" value="<?=Option::get("manao.opengraph", "og:image")?>"></td>
+		</tr>
+		<?$tabControl->End();?>
+		<?$tabControl->Buttons(array());?>
+		</form>
+	</div>

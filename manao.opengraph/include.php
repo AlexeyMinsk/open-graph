@@ -1,5 +1,5 @@
 <?
 	\Bitrix\Main\Loader::registerAutoloadClasses('manao.opengraph', array(
-		'Manao\\Opengraph\\openGraphLogic' => 'lib/openGraph.php'
+		'Manao\\Opengraph\\OpenGraphLogic' => 'lib/opengraph.php'
 	)
 );

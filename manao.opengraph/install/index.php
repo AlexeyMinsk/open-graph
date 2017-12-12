@@ -1,7 +1,10 @@
 <?
-	\Bitrix\Main\Localization\Loc::loadMessages(__FILE__);
 	use \Bitrix\Main\ModuleManager,
-	Bitrix\Main\Loader;
+		\Bitrix\Main\Loader,
+		\Bitrix\Main\Config\Option,
+		\Bitrix\Main\Localization\Loc; 
+		
+	Loc::loadMessages(__FILE__);
 	
 	$strPath2Lang = str_replace("\\", "/", __FILE__);
 	$strPath2Lang = substr($strPath2Lang, 0, strlen($strPath2Lang)-strlen("/install/index.php"));
@@ -27,10 +30,10 @@
 			
 			$this->MODULE_VERSION = $arModuleVersion["VERSION"];
 			$this->MODULE_VERSION_DATE = $arModuleVersion["VERSION_DATE"];
-			$this->MODULE_NAME = GetMessage("opengraph_MODULE_NAME");
-			$this->MODULE_DESCRIPTION = GetMessage("opengraph_MODULE_DESC");
-			$this->PARTNER_NAME = GetMessage("opengraph_PARTNER_NAME");
-			$this->PARTNER_URI = GetMessage("opengraph_PARTNER_URI");
+			$this->MODULE_NAME = Loc::getMessage("opengraph_MODULE_NAME");
+			$this->MODULE_DESCRIPTION = Loc::getMessage("opengraph_MODULE_DESC");
+			$this->PARTNER_NAME = Loc::getMessage("opengraph_PARTNER_NAME");
+			$this->PARTNER_URI = Loc::getMessage("opengraph_PARTNER_URI");
 		}
 		
 		function InstallDB($arParams = array()){
@@ -44,23 +47,23 @@
 		function InstallEvents(){
 			
 			Bitrix\Main\EventManager::getInstance()->registerEventHandler( 
-				"main", 
-				"OnEpilog", 
-				$this->MODULE_ID, 
-				"Manao\\Opengraph\\openGraphLogic", 
-				"OnEpilog" 
+			"main", 
+			"OnEpilog", 
+			$this->MODULE_ID, 
+			"Manao\\Opengraph\\OpenGraphLogic", 
+			"OnEpilog" 
 			);
 			return true;
-			}
+		}
 		
 		function UnInstallEvents(){
 			
 			Bitrix\Main\EventManager::getInstance()->unRegisterEventHandler( 
-				"main", 
-				"OnEpilog", 
-				$this->MODULE_ID, 
-				"Manao\\Opengraph\\openGraphLogic", 
-				"OnEpilog" 
+			"main", 
+			"OnEpilog", 
+			$this->MODULE_ID, 
+			"Manao\\Opengraph\\OpenGraphLogic", 
+			"OnEpilog" 
 			); 
 			return true;
 		}
@@ -69,20 +72,14 @@
 			
 			if(Loader::includeModule("fileman")){
 				
-				$rsSites = CSite::GetList($by="sort", $order="asc", Array());
-
-				while($site = $rsSites->fetch()){
-					$filemanProps = CFileMan::GetPropstypes($site['ID']);
-					
-					if(empty($filemanProps)){
-						$filemanProps = array();
-					}
-					$filemanProps['og:title'] = '';
-					$filemanProps['og:description'] = '';
-					$filemanProps['og:image'] = '';
-					
-					CFileMan::SetPropstypes($filemanProps, false, $site['ID']);
-				}
+				$filemanProps = CFileMan::GetPropstypes();
+				
+				$filemanProps = array(
+					'og:title' => Loc::getMessage("TITLE_NAME"),
+					'og:description' => Loc::getMessage("DESC_NAME"),
+					'og:image' => Loc::getMessage("IMAGE_NAME")
+				);
+				CFileMan::SetPropstypes($filemanProps);
 			}
 		}
 		
@@ -90,22 +87,18 @@
 			
 			if(Loader::includeModule("fileman")){
 				
-				$rsSites = CSite::GetList($by="sort", $order="asc", Array());
+				$filemanProps = CFileMan::GetPropstypes();
 				
-				while($site = $rsSites->fetch()){
-					$filemanProps = CFileMan::GetPropstypes($site['ID']);
-					
-					if(isset($filemanProps["og:title"])){
-						unset($filemanProps["og:title"]);
-					}
-					if(isset($filemanProps["og:description"])){
-						unset($filemanProps["og:description"]);
-					}
-					if(isset($filemanProps["og:image"])){
-						unset($filemanProps["og:image"]);
-					}
-					CFileMan::SetPropstypes($filemanProps, false, $site['ID']);
+				if(isset($filemanProps["og:title"])){
+					unset($filemanProps["og:title"]);
 				}
+				if(isset($filemanProps["og:description"])){
+					unset($filemanProps["og:description"]);
+				}
+				if(isset($filemanProps["og:image"])){
+					unset($filemanProps["og:image"]);
+				}
+				CFileMan::SetPropstypes($filemanProps);
 			}
 		}
 		
@@ -114,8 +107,8 @@
 			ModuleManager::RegisterModule(self::MODULE_ID);
 			$this->InstallEvents();
 			$this->setPageProps();
-		
-		return true;
+			
+			return true;
 		}
 		
 		function DoUninstall(){
@@ -123,8 +116,8 @@
 			ModuleManager::UnRegisterModule(self::MODULE_ID);
 			$this->UnInstallEvents();
 			$this->unsetPageProps();
+			Option::delete("manao.opengraph");
 			
 			return true;
 		}
-	}
-?>	
+	}	
