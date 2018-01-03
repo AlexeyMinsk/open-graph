@@ -14,7 +14,9 @@
 			$optionsId = array(//ID опции модуля
 				"og:title",
 				"og:description",
-				"og:image"
+				"og:image",
+				"og:image:width",
+				"og:image:height"
 			);
 			
 			$resultList = array();

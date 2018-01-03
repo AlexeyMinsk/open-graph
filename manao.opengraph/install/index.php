@@ -74,11 +74,16 @@
 				
 				$filemanProps = CFileMan::GetPropstypes();
 				
-				$filemanProps = array(
+				$tempArr = array(
 					'og:title' => Loc::getMessage("TITLE_NAME"),
 					'og:description' => Loc::getMessage("DESC_NAME"),
-					'og:image' => Loc::getMessage("IMAGE_NAME")
+					'og:image' => Loc::getMessage("IMAGE_NAME"),
+					'og:image:width' => Loc::getMessage("IMAGE_WIDTH"),
+					'og:image:height' => Loc::getMessage("IMAGE_HEIGHT")
 				);
+				
+				$filemanProps = array_merge($filemanProps, $tempArr);
+				
 				CFileMan::SetPropstypes($filemanProps);
 			}
 		}
@@ -97,6 +102,12 @@
 				}
 				if(isset($filemanProps["og:image"])){
 					unset($filemanProps["og:image"]);
+				}
+				if(isset($filemanProps["og:image:width"])){
+					unset($filemanProps["og:image:width"]);
+				}
+				if(isset($filemanProps["og:image:height"])){
+					unset($filemanProps["og:image:height"]);
 				}
 				CFileMan::SetPropstypes($filemanProps);
 			}

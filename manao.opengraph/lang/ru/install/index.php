@@ -8,3 +8,5 @@ $MESS["MOD_INSTALL"] = "Установить модуль";
 $MESS["TITLE_NAME"] = "ОГ заглавие";
 $MESS["DESC_NAME"] = "ОГ описание";
 $MESS["IMAGE_NAME"] = "ОГ изображение";
+$MESS["IMAGE_WIDTH"] = "ОГ ширина изображение";
+$MESS["IMAGE_HEIGHT"] = "ОГ высота изображение";

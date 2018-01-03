@@ -32,6 +32,12 @@
 		if(isset($_POST["image"])){
 			Option::set("manao.opengraph", "og:image", $_POST["image"]);
 		}
+		if(isset($_POST["image_width"])){
+			Option::set("manao.opengraph", "og:image:width", $_POST["image_width"]);
+		}
+		if(isset($_POST["image_height"])){
+			Option::set("manao.opengraph", "og:image:height", $_POST["image_height"]);
+		}
 	}
 ?>
 <div class="options-wrapper">
@@ -51,6 +57,14 @@
 		<tr>
 			<td valign="top"><label for="og:image">og:image</label></td>
 			<td><input type="text" name="image" id="og:image" size="40" value="<?=Option::get("manao.opengraph", "og:image")?>"></td>
+		</tr>
+		<tr>
+			<td valign="top"><label for="og:image:width">og:image:width</label></td>
+			<td><input type="text" name="image_width" id="og:image:width" size="40" value="<?=Option::get("manao.opengraph", "og:image:width")?>"></td>
+		</tr>
+		<tr>
+			<td valign="top"><label for="og:image:height">og:image:height</label></td>
+			<td><input type="text" name="image_height" id="og:image:height" size="40" value="<?=Option::get("manao.opengraph", "og:image:height")?>"></td>
 		</tr>
 		<?$tabControl->End();?>
 		<?$tabControl->Buttons(array());?>
